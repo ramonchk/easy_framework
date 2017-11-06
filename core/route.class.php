@@ -3,11 +3,11 @@ class Route{
 	public static $ha;
 
 	public function url($url){
-		if( substr($url, -1) == "/" ):
-			redirect_to(substr($url, 0, -1));
-		endif;
 		if( isset(Route::$ha[$url]) ):
 			$exec = Route::$ha[$url];
+			$exec();
+		elseif( isset(Route::$ha[substr($url, 0, -1)]) ):
+			$exec = Route::$ha[substr($url, 0, -1)];
 			$exec();
 		else:
 			$data['message'] = translate_message("noroute");

@@ -5,6 +5,6 @@
 	<title>Document</title>
 </head>
 <body>
-	<?php echo $data['message']; ?>
+	<?php echo $data['test']; ?>
 </body>
 </html>
