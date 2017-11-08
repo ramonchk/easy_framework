@@ -1,0 +1,35 @@
+|	index.php
+|	.htaccess
+|
+|
+|---app
+|	|	config.php
+|	|	routes.php
+|	|
+|	|---controller
+|	|
+|	|---model
+|	|
+|	|---views
+|		|	Welcome.php
+|		|
+|		|---messages
+|		|		error.php
+|
+|
+|---core
+|	|	app.class.php
+|	|	autoload.php
+|	|	functions.php
+|	|	route.class.php
+|	|	
+|	|---helpers
+|		|	database.class.php
+|		
+|
+|---lang
+|	|---eng
+|	|		lang.php
+|	|
+|	|---pt_BR
+|	|		lang.php

@@ -11,6 +11,7 @@ class Route{
 			$exec();
 		else:
 			$data['message'] = translate_message("noroute");
+			$data['error'] = "404";
 			load_view("messages/error", $data);
 		endif;
 	}

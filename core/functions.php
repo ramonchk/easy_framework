@@ -2,30 +2,63 @@
 	function load_view($viewname, $data = null){
 		if( can_open_view($viewname) ):
 			$data = $data;
+			if( $data !== null ):
+				foreach ($data as $key => $value):
+					$$key = $value;
+				endforeach;
+			endif;
 			require_once(BASE_PATH."app\\views\\".$viewname.".php");
 		else:
-			message_page("error", translate_message('viewnotfound'));
+			$data['message'] = translate_message('viewnotfound');
+			$data['error'] = "404";
+			$data['class'] = "error";
+			message_page("error", $data);
 		endif;
 	}
 
-	function load_model($model, $data = null){
+	function load_model($model){
 		if( can_open_model($model) ):
 			require_once(BASE_PATH."app\\model\\".$model.".php");
 			return New $model();
 		else:
-			message_page("error", translate_message('modelnotfound'));
+			$data['message'] = translate_message('modelnotfound');
+			$data['error'] = "404";
+			$data['class'] = "error";
+			message_page("error", $data);
 		endif;
 	}
 
-	function message_page($view, $message){
+	function load_controller($file){
+		if( can_open_controller($file) ):
+			require_once(BASE_PATH."app\\controller\\".$file.".php");
+		else:
+			$data['message'] = translate_message('controllernotfound');
+			$data['error'] = "404";
+			$data['class'] = "error";
+			message_page("error", $data);
+		endif;
+	}
+
+	function load_helper($file){
+		if( can_open_helper($file) ):
+			require_once(BASE_PATH."core\\helpers\\".$file.".class.php");
+			return New $file();
+		else:
+			$data['message'] = translate_message('helpernotfound');
+			$data['error'] = "404";
+			$data['class'] = "error";
+			message_page("error", $data);
+		endif;
+	}
+
+	function message_page($view, $data){
 		if( can_open_view("messages\\".$view) ):
-			$data["message"] = $message;
-			load_view("messages/".$view, $data);
-			exit();
+			die(load_view("messages/".$view, $data));
 		else:
 			$data['message'] = translate_message('viewnotfound');
-			load_view("messages/error", $data);
-			exit();
+			$data['error'] = "404";
+			$data['class'] = "error";
+			die(load_view("messages/error", $data));
 		endif;
 	}
 
@@ -43,6 +76,14 @@
 		return file_exists(BASE_PATH."app\\model\\".$file.".php");
 	}
 
+	function can_open_controller($file){
+		return file_exists(BASE_PATH."app\\controller\\".$file.".php");
+	}
+
+	function can_open_helper($file){
+		return file_exists(BASE_PATH."core\\helpers\\".$file.".class.php");
+	}
+
 	function base_url(){
 		if( USE_HTACCESS ):
 			return URL_BASE;
@@ -52,7 +93,12 @@
 	}
 
 	function redirect_to($url){
-		//header("Location: ".base_url().$url);
+		header("Location: ".base_url().$url);
+	}
+
+	function redirect_link($to = ""){
+		$link = USE_HTACCESS ? URL_BASE.$to : URL_BASE."/index.php".$to;
+		return $link;
 	}
 
  ?>

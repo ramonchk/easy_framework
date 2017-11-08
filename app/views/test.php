@@ -5,6 +5,6 @@
 	<title>Document</title>
 </head>
 <body>
-	<?php echo $data['test']; ?>
+	<?php echo ($test3['1']['1']); ?>
 </body>
 </html>
