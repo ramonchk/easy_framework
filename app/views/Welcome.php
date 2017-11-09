@@ -6,9 +6,10 @@
 </head>
 <body>
 	<h1> Welcome </h1>
-	<a href="<?php echo redirect_link("/teste") ?>">Teste</a>
+		<?=redirect_link("/teste", true, "Teste")?>
 	<br>
-	<a href="<?php echo redirect_link("/teste2") ?>">Teste 2</a>
+		<?=redirect_link("/teste2", true, "Teste 2")?>
 	<br>
+		<?=redirect_link("/teste3", true, "Teste 3")?>
 </body>
 </html>

@@ -5,6 +5,7 @@
 |---app
 |	|	config.php
 |	|	routes.php
+|	|	database.php
 |	|
 |	|---controller
 |	|

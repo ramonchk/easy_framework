@@ -13,5 +13,4 @@
 	$index = new App();
 	$index->url($url);
 	$index->load_routes();
-
 ?>

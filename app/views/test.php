@@ -5,6 +5,7 @@
 	<title>Document</title>
 </head>
 <body>
-	<?php echo ($test3['1']['1']); ?>
+	<?php echo redirect_link("", true, "inicio"); ?>
+	<?php var_dump($test); ?>
 </body>
 </html>

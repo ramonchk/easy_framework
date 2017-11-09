@@ -1,4 +1,4 @@
-<?php 
+<?php
 	function load_view($viewname, $data = null){
 		if( can_open_view($viewname) ):
 			$data = $data;
@@ -53,7 +53,7 @@
 
 	function message_page($view, $data){
 		if( can_open_view("messages\\".$view) ):
-			die(load_view("messages/".$view, $data));
+			die( load_view("messages/".$view, $data) );
 		else:
 			$data['message'] = translate_message('viewnotfound');
 			$data['error'] = "404";
@@ -96,9 +96,15 @@
 		header("Location: ".base_url().$url);
 	}
 
-	function redirect_link($to = ""){
+	function redirect_link($to = "", $button = false, $title = "", $class = "", $id = ""){
 		$link = USE_HTACCESS ? URL_BASE.$to : URL_BASE."/index.php".$to;
+		if( $button ):
+			$link = "<a title=\"".$title."\" class=\"".$class."\" id=\"".$id."\" href=\"".$link."\">".$title."</a>";
+		endif;
 		return $link;
 	}
 
- ?>
+	function get_database_infos($db = "default"){
+		include("app/database.php");
+		return $database[$db];
+	}
