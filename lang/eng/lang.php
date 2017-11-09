@@ -4,4 +4,5 @@
 	$message["controllernotfound"] = "Controller not found!";
 	$message["helpernotfound"]     = "Helper not found!";
 	$message["noroute"]            = "Route not defined!";
+	$messege["newroutesuccess"]    = "Route created successfully!";
 ?>
