@@ -1,18 +1,9 @@
 <?php
 $database['default'] = array(
-	'driver'   => 'mysqli',
+	'driver'   => 'mysql',
 	'host'     => 'localhost',
 	'port'     => '3306',
-	'schema'   => 'amon_novo',
-	'username' => 'root',
-	'password' => 'root'
-);
-
-$database['visu'] = array(
-	'driver'   => 'mysqli',
-	'host'     => 'localhost',
-	'port'     => '3306',
-	'schema'   => 'visu',
+	'schema'   => 'database_test',
 	'username' => 'root',
 	'password' => 'root'
 );

@@ -2,14 +2,14 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<meta charset="UTF-8">
-	<title>Document</title>
+	<meta charset="UTF-8" />
+	<title><?php echo @$title; ?></title>
+	<?php load_css("highlight/highlight.pack.css"); ?>
 </head>
 <style>
-	body{
-		background-color: #ECECEC;
-	}
+	body{ background-color: #ECECEC; }
 	#content{
+		margin-top: 5%;
 		width: 90%;
 		margin-left: auto;
 		margin-right: auto;
@@ -25,35 +25,53 @@
 		color: white;
 		line-height: 50px;
 		padding-left: 15px;
+		padding-right: 15px;
 		padding-bottom: 7px;
 		background-color: black;
 	}
-	h3{ padding-left: 40px; }
-	.right{ float: right;}
-	
+	.message{ padding-left: 60px; padding-right: 60px; }
+	.right{ text-align: right;}
 	.error{ border: 7px solid red !important; }
 	.error h1{ background-color: red; }
-	
 	.warning{ border: 7px solid yellow !important; }
 	.warning h1{ background-color: yellow; color: black; }
-	
 	.success{ border: 7px solid green !important; }
 	.success h1{ background-color: green; }
-	
 	.info{ border: 7px solid blue !important; }
 	.info h1{ background-color: blue; }
+	@media only screen and (max-width: 680px) {
+		#content{ width: 98%; }
+		.message{padding-left: 0; padding-right: 0;}
+	}
 </style>
 <body>
 	<div id="content">
 		<div class="<?php echo @$class; ?>">
-			<h1><?php echo @$error; ?></h1>
-			<h3><?php echo @$message; ?></h3>
+			<h1><?php echo @$title; ?></h1>
+			<div class="message">
+				<h3><?php echo @$message; ?></h3>
+			</div>
 		</div>
 		<br/>
 		<div class="right">
-			<strong>Easy Framework <?php echo EF_V; ?></strong> - <strong>PHP <?php echo phpversion(); ?></strong> - Página carregada em <strong><?php echo $time; ?> segundos</strong>.
-		</div>
-		<br/>
-	</div>
+			<strong>
+				Easy Framework <?php echo EF_V; ?>
+			</strong> 
+				- 
+			<strong>
+				PHP <?php echo phpversion(); ?>
+			</strong> 
+				- <?php echo translate_message("welcomeloadindex") ?>
+			<strong>
+				<?php echo $time; ?>
+				<?php echo translate_message("welcomesecondsindex") ?>.
+			</strong>
+		</div>	</div>
+
+
+	<?php load_js("highlight/highlight.pack.js"); ?>
+	<script>
+		hljs.initHighlightingOnLoad();
+	</script>
 </body>
 </html>

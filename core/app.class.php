@@ -11,10 +11,10 @@ class App{
 	}
 
 	private function get_route(){
-		$url = $this->url;
-		$url = str_replace(URL_BASE, "", $url);
-		$url = str_replace("index.php", "", $url);
-		$url = str_replace("//", "/", $url);
+		$url   = $this->url;
+		$url   = str_replace(URL_BASE, "", $url);
+		$url   = str_replace("index.php", "", $url);
+		$url   = str_replace("//", "/", $url);
 		$route = new Route();
 		$route->url($url);
 	}

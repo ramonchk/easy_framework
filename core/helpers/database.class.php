@@ -18,37 +18,45 @@ class database{
 		$pdo = array("mysql", "pgsql");
 
 		if( in_array($this->usage, $pdo) ):
-			$conn = $this->connection = new PDO( $this->database['driver'].":dbname=".$this->database['schema'].";host=".$this->database['host'], $this->database['username'], $this->database['password'], array( PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES 'utf8'" ) );
-			$conn->setAttribute( PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION );    
-			$query = $conn->prepare( $sql );
+			try{
+				$conn = $this->connection = new PDO( $this->database['driver'].":dbname=".$this->database['schema'].";host=".$this->database['host'], $this->database['username'], $this->database['password'], array( PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES 'utf8'" ) );
+				$conn->setAttribute( PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION );    
+				$query = $conn->prepare( $sql );
 
-			if( $data != null ):
-				foreach ( $data as $key => $value ):
-					$query->bind_param( $key, $value );
-				endforeach;
-			endif;
+				if( $data != null ):
+					foreach ( $data as $key => $value ):
+						$query->bind_param( $key, $value );
+					endforeach;
+				endif;
 
-			$data = array();
-			$query->execute();
+				$data = array();
+				$query->execute();
 
-			while( $row = $query->fetch() ):
-				foreach ( $row as $key => $value ):
-					if( is_int($key) ):
-						unset( $row[$key] );
-					endif;
-				endforeach;
+				while( $row = $query->fetch() ):
+					foreach ( $row as $key => $value ):
+						if( is_int($key) ):
+							unset( $row[$key] );
+						endif;
+					endforeach;
+					
+					array_push( $data, ($row) );
+				endwhile;
 				
-				array_push( $data, ($row) );
-			endwhile;
-			
-			$conn = null;
-			return $this->returnt( $data );
+				$conn = null;
+				
+				create_log( array("action" => "Database QUERY", "response" => $data) );
+
+				return $this->returnt( $data );
+			} catch( PDOException $e ) {
+				create_log( array("action" => "Database Connection Error", "error" => $e->getMessage()) );
+			}
 		endif;
 
 		if( $this->usage == "mysqli" ):
-			$this->connection = new mysqli( $this->database['host'], $this->database['username'], $this->database['password'], $this->database['schema'] );
+			@$this->connection = new mysqli( $this->database['host'], $this->database['username'], $this->database['password'], $this->database['schema'] );
 
 			if ( mysqli_connect_errno() ):
+				create_log( array("action" => "Database Connection Error", "error" => mysqli_connect_error()) );
 				printf( "Falha na conexão: %s\n", mysqli_connect_error() ); 
 				exit(); 
 			endif;
@@ -71,6 +79,9 @@ class database{
 			endwhile;
 
 			$this->connection->close();
+
+			create_log( array("action" => "Database QUERY", "response" => $data) );
+
 			return $this->returnt( $data );
 		endif;
 	}

@@ -10,9 +10,10 @@ class Route{
 			$exec = Route::$routes[substr($url, 0, -1)];
 			$exec();
 		else:
-			$data['message'] = translate_message("noroute");
-			$data['error'] = "404";
-			load_view("messages/error", $data);
+			$data['title'] = "404";
+			$data['message'] = translate_message("noroute", array("{routeName}" => $url));
+			$data['class'] = "error";
+			load_view("messages/message", $data);
 		endif;
 	}
 
@@ -20,5 +21,4 @@ class Route{
 		Route::$routes[$path] = $callback;
 	}
 }
-
- ?>
+?>

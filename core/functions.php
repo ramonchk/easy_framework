@@ -7,81 +7,87 @@
 					$$key = $value;
 				endforeach;
 			endif;
-			require_once(BASE_PATH."app\\views\\".$viewname.".php");
+			require_once(BASE_PATH.VIEWS_PATH.$viewname.".php");
 		else:
-			$data['message'] = translate_message('viewnotfound');
-			$data['error'] = "404";
-			$data['class'] = "error";
-			message_page("error", $data);
+			$data['message'] = translate_message('viewnotfound', array("{viewName}" => $viewname));
+			$data['title']   = "404";
+			$data['class']   = "error";
+			message_page("message", $data);
 		endif;
 	}
 
 	function load_model($model){
 		if( can_open_model($model) ):
-			require_once(BASE_PATH."app\\model\\".$model.".php");
+			require_once(BASE_PATH.MODEL_PATH.$model.".php");
 			return New $model();
 		else:
-			$data['message'] = translate_message('modelnotfound');
-			$data['error'] = "404";
-			$data['class'] = "error";
-			message_page("error", $data);
+			$data['message'] = translate_message('modelnotfound', array("{modelName}" => $model));
+			$data['title']   = "404";
+			$data['class']   = "error";
+			message_page("message", $data);
 		endif;
 	}
 
 	function load_controller($file){
 		if( can_open_controller($file) ):
-			require_once(BASE_PATH."app\\controller\\".$file.".php");
+			require_once(BASE_PATH.CONTROLLER_PATH.$file.".php");
 		else:
-			$data['message'] = translate_message('controllernotfound');
-			$data['error'] = "404";
-			$data['class'] = "error";
-			message_page("error", $data);
+			$data['message'] = translate_message('controllernotfound', array("{controllName}" => $file));
+			$data['title']   = "404";
+			$data['class']   = "error";
+			message_page("message", $data);
 		endif;
 	}
 
 	function load_helper($file){
 		if( can_open_helper($file) ):
-			require_once(BASE_PATH."core\\helpers\\".$file.".class.php");
+			require_once(BASE_PATH.HELPERS_PATH.$file.".class.php");
 			return New $file();
 		else:
-			$data['message'] = translate_message('helpernotfound');
-			$data['error'] = "404";
-			$data['class'] = "error";
-			message_page("error", $data);
+			$data['message'] = translate_message('helpernotfound', array("{modelName}" => $file));
+			$data['title']   = "404";
+			$data['class']   = "error";
+			message_page("message", $data);
 		endif;
 	}
 
 	function message_page($view, $data){
-		if( can_open_view("messages\\".$view) ):
+		if( can_open_view("messages".DIR_SEPARATOR.$view) ):
 			die( load_view("messages/".$view, $data) );
 		else:
 			$data['message'] = translate_message('viewnotfound');
-			$data['error'] = "404";
-			$data['class'] = "error";
-			die(load_view("messages/error", $data));
+			$data['title']   = "404";
+			$data['class']   = "error";
+			die(load_view("messages/message", $data));
 		endif;
 	}
 
-	function translate_message($which, $lang = LANGUAGE_DEFAULT){
+	function translate_message($which, $var = null, $lang = LANGUAGE_DEFAULT){
 		$message = array();
-		include(BASE_PATH."lang\\".$lang."\\lang.php");
-		return $message[$which];
+		include(BASE_PATH.LANG_PATH.$lang.DIR_SEPARATOR.LANG_FILE);
+		$message = $message[$which];
+		if( $var !== null ):
+			foreach ($var as $key => $value):
+				$message = str_replace($key, $value, $message);
+			endforeach;
+		endif;
+		return $message;
 	}
 
 	function can_open_view($file){
-		return file_exists(BASE_PATH."app\\views\\".$file.".php");
+		return file_exists(BASE_PATH.VIEWS_PATH.$file.".php");
 	}
 
 	function can_open_model($file){
-		return file_exists(BASE_PATH."app\\model\\".$file.".php");
+		return file_exists(BASE_PATH.MODEL_PATH.$file.".php");
 	}
 
 	function can_open_controller($file){
-		return file_exists(BASE_PATH."app\\controller\\".$file.".php");
+		return file_exists(BASE_PATH.CONTROLLER_PATH.$file.".php");
 	}
 
 	function can_open_helper($file){
-		return file_exists(BASE_PATH."core\\helpers\\".$file.".class.php");
+		return file_exists(BASE_PATH.HELPERS_PATH.$file.".class.php");
 	}
 
 	function base_url(){
@@ -93,12 +99,12 @@
 	}
 
 	function redirect_to($url){
-		header("Location: ".base_url().$url);
+		header("Location: ".base_url().$url, FALSE);
 	}
 
-	function redirect_link($to = "", $button = false, $title = "", $class = "", $id = ""){
-		$link = USE_HTACCESS ? URL_BASE.$to : URL_BASE."/index.php".$to;
-		if( $button ):
+	function redirect_link($to = "", $title = "", $class = "", $id = ""){
+		$link = base_url().$to;
+		if( $title !== "" ):
 			$link = "<a title=\"".$title."\" class=\"".$class."\" id=\"".$id."\" href=\"".$link."\">".$title."</a>";
 		endif;
 		return $link;
@@ -108,3 +114,58 @@
 		include("app/database.php");
 		return $database[$db];
 	}
+
+	function load_css($cssFile){
+		print_r("<link rel=\"stylesheet\" href=\"".URL_BASE.PUBLIC_PATH.$cssFile."\" />");
+	}
+
+	function load_js($jsFile){
+		print_r("<script src=\"".URL_BASE.PUBLIC_PATH.$jsFile."\"></script>");
+	}
+
+	function create_log($message){
+		if( LOG ):
+			if ( !isset($_SESSION) ):
+				session_start();
+			endif;
+
+			$logId = ( ( ( rand() * rand() ) + rand() ) - rand() );
+			$logFileName = BASE_PATH.LOG_PATH.date('d-m-Y H-i-s')." ".$logId.".json";
+			$toJson = array(
+				"logId"    => $logId,
+				"date"     => date('d/m/Y H:i:s'),
+				"ip"       => get_client_ip(),
+				"sessions" => $_SESSION,
+				"cookies"  => $_COOKIE,
+				"message"  => $message
+			);
+
+			$string = json_encode( $toJson, JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES );
+
+			file_put_contents($logFileName, $string);
+		endif;
+	}
+
+	function get_client_ip(){
+		$ipaddress = '';
+		if( isset($_SERVER['HTTP_CLIENT_IP']) ):
+			$ipaddress = $_SERVER['HTTP_CLIENT_IP'];
+		elseif( isset($_SERVER['HTTP_X_FORWARDED_FOR']) ):
+			$ipaddress = $_SERVER['HTTP_X_FORWARDED_FOR'];
+		elseif( isset($_SERVER['HTTP_X_FORWARDED']) ):
+			$ipaddress = $_SERVER['HTTP_X_FORWARDED'];
+		elseif( isset($_SERVER['HTTP_FORWARDED_FOR']) ):
+			$ipaddress = $_SERVER['HTTP_FORWARDED_FOR'];
+		elseif( isset($_SERVER['HTTP_FORWARDED']) ):
+			$ipaddress = $_SERVER['HTTP_FORWARDED'];
+		elseif( isset($_SERVER['REMOTE_ADDR']) ):
+			$ipaddress = $_SERVER['REMOTE_ADDR'];
+		else:
+			$ipaddress = 'UNKNOWN';
+		endif;
+
+		return $ipaddress;
+	}
+
+
+	// load view com twig
