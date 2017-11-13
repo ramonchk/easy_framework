@@ -1,4 +1,8 @@
 <?php
+	if( isset($_GET['lang']) ):
+		DEFINE("USE_THIS_LANG", $_GET['lang']);
+	endif;
+
 	function load_view($viewname, $data = null){
 		if( can_open_view($viewname) ):
 			$data = $data;
@@ -53,16 +57,19 @@
 
 	function message_page($view, $data){
 		if( can_open_view("messages".DIR_SEPARATOR.$view) ):
+			create_log($data);
 			die( load_view("messages/".$view, $data) );
 		else:
 			$data['message'] = translate_message('viewnotfound');
 			$data['title']   = "404";
 			$data['class']   = "error";
+			create_log($data);
 			die(load_view("messages/message", $data));
 		endif;
 	}
 
-	function translate_message($which, $var = null, $lang = LANGUAGE_DEFAULT){
+	function translate_message($which, $var = null, $lang = "eng"){
+		$lang = get_lang_to_use();
 		$message = array();
 		include(BASE_PATH.LANG_PATH.$lang.DIR_SEPARATOR.LANG_FILE);
 		$message = $message[$which];
@@ -167,5 +174,23 @@
 		return $ipaddress;
 	}
 
+	function get_lang_to_use(){
+		$use = "eng";
+		if( DEFINED("USE_THIS_LANG") && null !== USE_THIS_LANG && USE_THIS_LANG !== "" ):
+			$use = USE_THIS_LANG;
+		elseif( DEFINED("LANGUAGE_DEFAULT") && LANGUAGE_DEFAULT !== null ):
+			$use = LANGUAGE_DEFAULT;
+		endif;
 
-	// load view com twig
+		if( file_exists(BASE_PATH.LANG_PATH.$use.DIR_SEPARATOR.LANG_FILE) ):
+			return $use;
+		else:
+			$data["class"] = "error";
+			$data["title"] = "Language file not Found!";
+			$data["message"] = "The language file is missing.<br/>Please use the --verify_files command in the cli.php file to fix this error!";
+			create_log($data);
+			message_page("message", $data);
+		endif;
+	}
+
+	//Dowload,Email,File,HTML,Secutiry,Text,XML, Twig

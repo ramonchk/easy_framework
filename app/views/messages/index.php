@@ -1,6 +1,6 @@
 <?php
-	include_once("../../app/config.php");
-	include_once("../../core/functions.php");
+	include_once("../../../app/config.php");
+	include_once("../../../core/functions.php");
  ?>
 <!DOCTYPE html>
 <html lang="en">
