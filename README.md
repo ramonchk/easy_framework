@@ -1,3 +1,4 @@
+# Versão Beta 1.7
 # Começando
 - Editar as configurações no arquivo config.php
 ```php
@@ -11,6 +12,7 @@
 ```
 - Editar o banco de dados em database.php
 	- Pode haver mais de um banco de dados
+
 ```php
 $database['default'] = array(
 	'driver'   => 'mysql',
