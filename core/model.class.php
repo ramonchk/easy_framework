@@ -1,14 +1,14 @@
 <?php
 class Model_class{
-	private $childName;
+	private $baseClassChildName;
 
 	public function __construct(){
-		$this->childName = get_called_class();
+		$this->baseClassChildName = get_called_class();
 	}
 
 	public function __destruct(){
-		$data['message'] = "Class '".$this->childName."' started successfully!";
-		$data['modelName'] = $this->childName.".php";
+		$data['message']   = "Class '".$this->baseClassChildName."' started successfully!";
+		$data['modelName'] = $this->baseClassChildName.".php";
 		create_log($data);
 	}
 }

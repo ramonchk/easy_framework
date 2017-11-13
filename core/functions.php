@@ -21,22 +21,54 @@
 	}
 
 	function load_model($model){
-		if( can_open_model($model) ):
-			require_once(BASE_PATH.MODEL_PATH.$model.".php");
-			return New $model();
+		if( is_array($model) ):
+			foreach ($model as $key => $value):
+				load_model($value);
+			endforeach;
 		else:
-			$data['message'] = translate_message('modelnotfound', array("{modelName}" => $model));
-			$data['title']   = "404";
-			$data['class']   = "error";
-			message_page("message", $data);
+			if( can_open_model($model) ):
+				require_once(BASE_PATH.MODEL_PATH.$model.".php");
+				return New $model();
+			else:
+				$data['message'] = translate_message('modelnotfound', array("{modelName}" => $model));
+				$data['title']   = "404";
+				$data['class']   = "error";
+				message_page("message", $data);
+			endif;
 		endif;
 	}
 
-	function load_controller($file){
-		if( can_open_controller($file) ):
-			require_once(BASE_PATH.CONTROLLER_PATH.$file.".php");
+	function load_controller($controller, $data = array()){
+		$controler = null;
+		$controllerFile = $controller;
+		$controllerFunc = "index";
+		$newdata = array();
+		if( strripos ($controller, ".") ):
+			$controler = explode(".", $controller);
+			$controllerFile = $controler[0];
+			$controllerFunc = $controler[1];
+			unset($controler[0]);
+			unset($controler[1]);
+		endif;
+		if( !empty($controler) ):
+			foreach ($controler as $key => $value):
+				$newdata[$value] = $data[$key];
+			endforeach;
 		else:
-			$data['message'] = translate_message('controllernotfound', array("{controllName}" => $file));
+			if( is_array($data) ):
+			foreach ($data as $key => $value):
+				array_push($newdata, $data[$key]);
+			endforeach;
+			endif;
+		endif;
+		if( can_open_controller($controllerFile) ):
+			require_once(BASE_PATH.CONTROLLER_PATH.$controllerFile.".php");
+			$controller = New $controllerFile;
+			if( $controllerFunc !== "" ):
+				$controller->$controllerFunc($newdata);
+			endif;
+		else:
+			$data['message'] = translate_message('controllernotfound', array("{controllName}" => $controllerFile));
 			$data['title']   = "404";
 			$data['class']   = "error";
 			message_page("message", $data);
@@ -44,14 +76,20 @@
 	}
 
 	function load_helper($file){
-		if( can_open_helper($file) ):
-			require_once(BASE_PATH.HELPERS_PATH.$file.".class.php");
-			return New $file();
+		if( is_array($file) ):
+			foreach ($file as $key => $value):
+				load_helper($value);
+			endforeach;
 		else:
-			$data['message'] = translate_message('helpernotfound', array("{modelName}" => $file));
-			$data['title']   = "404";
-			$data['class']   = "error";
-			message_page("message", $data);
+			if( can_open_helper($file) ):
+				require_once(BASE_PATH.HELPERS_PATH.$file.".class.php");
+				return New $file();
+			else:
+				$data['message'] = translate_message('helpernotfound', array("{modelName}" => $file));
+				$data['title']   = "404";
+				$data['class']   = "error";
+				message_page("message", $data);
+			endif;
 		endif;
 	}
 
@@ -185,12 +223,12 @@
 		if( file_exists(BASE_PATH.LANG_PATH.$use.DIR_SEPARATOR.LANG_FILE) ):
 			return $use;
 		else:
-			$data["class"] = "error";
-			$data["title"] = "Language file not Found!";
+			$data["class"]   = "error";
+			$data["title"]   = "Language file not Found!";
 			$data["message"] = "The language file is missing.<br/>Please use the --verify_files command in the cli.php file to fix this error!";
 			create_log($data);
 			message_page("message", $data);
 		endif;
 	}
 
-	//Dowload,Email,File,HTML,Secutiry,Text,XML, Twig
+	//Dowload,Email,File,HTML,XML, Twig
