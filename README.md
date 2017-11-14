@@ -1,38 +1,6 @@
 # Versão Beta 1.7
 # Começando
-- Editar as configurações no arquivo config.php
-```php
-	$config["LANGUAGE"]         = "eng";
-	$config["DEBUG"]        = true;
-	$config["USE_HTACCESS"] = true;
-	$config["LOG"]          = false;
-	$config["URL_BASE"]     = "http://myapp.com";
-	$config["BASE_PATH"]    = '\var\html\apppath';
 
-```
-- Editar o banco de dados em database.php
-`Pode haver mais de um banco de dados`
-
-```php
-$database['default'] = array(
-	'driver'   => 'mysql',
-	'host'     => 'localhost',
-	'port'     => '3306',
-	'schema'   => 'mydb',
-	'username' => 'root',
-	'password' => 'root'
-);
-
-$database['anotherDB'] = array(
-	'driver'   => 'mysql',
-	'host'     => 'localhost',
-	'port'     => '3306',
-	'schema'   => 'mydb2',
-	'username' => 'root',
-	'password' => 'root'
-);
-
-```
 
 #Criando Rotas
 - As rotas ficam no arquivo app/routes.php
