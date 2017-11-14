@@ -33,6 +33,7 @@ $database['anotherDB'] = array(
 );
 
 ```
+
 #Criando Rotas
 - As rotas ficam no arquivo app/routes.php
 - A criação de rotas é simples, começa chamanda a função estatica get da classe Route e passa dois parametros, $route e $callback
