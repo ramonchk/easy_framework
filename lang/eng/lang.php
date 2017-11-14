@@ -8,7 +8,7 @@
 	$message["welcometitleindex"]       = "Welcome to Easy Framework!";
 	$message["welcomeloadindex"]        = "Page loaded in";
 	$message["welcomesecondsindex"]     = "seconds";
-	$message["welcomemessageindex"]     = "Welcome to Easy Framework. <br/>To get started edit the file /app/controller/index.php <br/>To create new routes add the following code in the file /app/routes.php <br/><pre><code>Route::get( '/route', function(){\n\tload_controller('ControllerName');\n\t//Will load the controller into the folder /app/controller/ControllerName.php\n\tload_view(\"ViewName\");\n\t//Will load the view into the folder /app/view/ViewName.php\n\t//Everything can be done inside the controller or right here\n});\n</code></pre><small>Highlights by <a href = \"https://highlightjs.org/\" target = \"_blank\">Highlight.js</a></small>";
+	$message["welcomemessageindex"]     = "Easy and beautiful!<br/><pre><code>//app/routes.app\nRoute::get( '/route', 'ControllerClass.Func');\n\n//app/controller/ControllerClass.php\nclass ControllerClass{\n\tpublic function index(){\n\t\techo 'Index Page';\n\t}\n\tpublic function Func(){\n\t\techo '/Route Page';\n\t}\n}\n</code></pre><small>Highlights by <a href = \"https://highlightjs.org/\" target = \"_blank\">Highlight.js</a></small>";
 	$message['uploaderror']             = "Extension not allowed!";
 	$message['uploadsuccess']           = "Successfully uploaded!";
 	$message['uploaderror1']            = "The uploaded file exceeds the upload_max_filesize directive in php.ini!";

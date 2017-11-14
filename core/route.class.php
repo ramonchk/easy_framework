@@ -1,7 +1,7 @@
 <?php 
 class Route{
 	public static $routes;
-	public static $params;
+	public static $params = array("<any>", "<int>", "<string>");
 
 	public function url($url){
 		if( $url == "/" ):
@@ -13,29 +13,79 @@ class Route{
 			$args       = "";
 			$params     = "";
 		else:
-			$path = explode("/", $url);
-			unset($path[0]);
+			$routeToGet = "";
+			$allRoutes = self::$routes;
+			$errorLint = array("old" => 0, "new" => 0);
+			$params    = array();
+			$args      = "";
+			$old;
+			$new;
+			foreach ($allRoutes as $key => $value):
+				$diferences = get_difference_between($key, $url);
+				$old = explode("/", $diferences['new']);
+				$new = explode("/", $diferences['old']);
 
-			$url_base = $path[1];
-			unset($path[1]);
-			$params = $path;
-
-			$routeToGet = "/".$url_base;
-
-			$args = "";
-
-			foreach ($params as $key => $value):
-				if( isset(self::$routes[$routeToGet."/<any>"]) ):
-					$routeToGet = $routeToGet."/<any>";
-				else:
-					if( is_numeric($value) ):
-						$routeToGet = $routeToGet.'/<int>';
-					elseif( is_string($value) ):
-						$routeToGet = $routeToGet."/<string>";
+				if( count($old) == count($new) ):
+					if( check_values(self::$params, $old)  ):
+						$errorLint['old'] = $errorLint['old']+1;
+						$errorLint['new'] = $errorLint['new']+1;
+						foreach ($old as $key2 => $value2):
+							if( $value2 == "<int>" ):
+								if( !is_numeric($new[$key2]) ):
+									$log['Message'] = "Error in routes";
+									$log['Error'] = "Last parameter does not match the required type!";
+									$log["paramRequired"] = "Int";
+									$log["paramReceived"] = $new[$key2];
+									$data['title']   = "404";
+									$data['message'] = translate_message("noroute", array("{routeName}" => $url));
+									$data['class']   = "error";
+									load_view("messages/message", $data);
+									exit();
+								endif;
+							endif;
+							if( $value2 == "<string>" ):
+								if( !ctype_alpha($new[$key2]) ):
+									$log['Message'] = "Error in routes";
+									$log['Error'] = "Last parameter does not match the required type!";
+									$log["paramRequired"] = "String";
+									$log["paramReceived"] = $new[$key2];
+									$data['title']   = "404";
+									$data['message'] = translate_message("noroute", array("{routeName}" => $url));
+									$data['class']   = "error";
+									load_view("messages/message", $data);
+									exit();
+								endif;
+							endif;
+							array_push($params, $new[$key2]);
+							$args .= "\$params[".$key2."],";
+							$routeToGet = $key;
+							//var_dump($old);
+							//var_dump($new);
+						endforeach;
 					endif;
 				endif;
-				$args .= "\$params[".$key."],";
 			endforeach;
+
+			//var_dump($url);
+			//var_dump($args);
+			//var_dump($routeToGet);
+			//var_dump($params);
+
+			if( $errorLint['old'] !== 1 || $errorLint['new'] !== 1 ):
+				$log['Message'] = "Error in routes";
+				$log['Old'] = $old;
+				$log['New'] = $new;
+				$log['url'] = $url;
+				$log['args'] = $args;
+				$log['routeToGet'] = $routeToGet;
+				$log['params'] = $params;
+				create_log($log);
+				$data['title']   = "404";
+				$data['message'] = translate_message("noroute", array("{routeName}" => $url));
+				$data['class']   = "error";
+				load_view("messages/message", $data);
+				exit();
+			endif;
 		endif;
 
 		$code  = "\$exec = Route::\$routes['$routeToGet']; \$exec(";

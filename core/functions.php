@@ -20,7 +20,7 @@
 		endif;
 	}
 
-	function load_model($model){
+	function load_model($model, $initParam = null){
 		if( is_array($model) ):
 			foreach ($model as $key => $value):
 				load_model($value);
@@ -28,7 +28,11 @@
 		else:
 			if( can_open_model($model) ):
 				require_once(BASE_PATH.MODEL_PATH.$model.".php");
-				return New $model();
+				if( $initParam == null ):
+					return New $model($initParam);
+				else:
+					return New $model();
+				endif;
 			else:
 				$data['message'] = translate_message('modelnotfound', array("{modelName}" => $model));
 				$data['title']   = "404";
@@ -93,7 +97,7 @@
 		endif;
 	}
 
-	function message_page($view, $data){
+	function message_page($view = "message", $data = array("class" => "error", "title" => "Message Page", "message" => "Without Message!")){
 		if( can_open_view("messages".DIR_SEPARATOR.$view) ):
 			create_log($data);
 			die( load_view("messages/".$view, $data) );
@@ -232,3 +236,33 @@
 	}
 
 	//Dowload,Email,File,HTML,XML, Twig
+
+	function get_difference_between($old, $new){
+		$from_start = strspn($old ^ $new, "\0");        
+		$from_end = strspn(strrev($old) ^ strrev($new), "\0");
+
+		$old_end = strlen($old) - $from_end;
+		$new_end = strlen($new) - $from_end;
+
+		$start = substr($new, 0, $from_start);
+		$end = substr($new, $new_end);
+		$new_diff = substr($new, $from_start, $new_end - $from_start);  
+		$old_diff = substr($old, $from_start, $old_end - $from_start);
+
+		return array("old"=>$new_diff, "new"=>$old_diff);
+	}
+
+	function check_values($keyToVerify, $array){
+		$newArray = array();
+		foreach ($array as $key => $value):
+			if( in_array($value, $keyToVerify) ):
+				array_push($newArray, $array[$key]);
+			endif;
+		endforeach;
+
+		if( $newArray == $array ):
+			return true;
+		else:
+			return false;
+		endif;
+	}

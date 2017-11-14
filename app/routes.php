@@ -3,8 +3,3 @@
 Route::get( "/index" ,function(){ 
 	load_controller("WelcomeController");
 });
-
-Route::get( "/vai/vai/<int>" ,function($id){ 
-	echo $id;
-});
-//http://localhost/framework/vai/vai/12312

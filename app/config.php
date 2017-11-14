@@ -1,5 +1,5 @@
 <?php 
-	$config["lang"]         = "pt_BR";
+	$config["LANGUAGE"]     = "pt_BR";
 	$config["DEBUG"]        = TRUE;
 	$config["USE_HTACCESS"] = TRUE;
 	$config["LOG"]          = FALSE;
