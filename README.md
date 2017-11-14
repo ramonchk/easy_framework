@@ -74,7 +74,7 @@ Route::get( "/index/<int>/dontWork", "IndexController" );
 
 ```
 
-#Controllers
+# Controllers
 - Os controllers devem ficar na pasta app/controller
 - O nome do arquivo deve ser igual ao nome da classe
 - Quando um controller é chamado sem a especificação de função ele executa a função index()
@@ -109,7 +109,7 @@ public function testfunc($data){
 
 ```
 
-#Views
+# Views
 - Os Views ficam na pasta app/views
 - Os views são chamados pela função load_view($viewFile, $data = null);
 - $viewFile é string e pode ser só o nome do arquivo, e caso o arquivo esteja dentro de uma subpasta, o mesmo deve ser especificado com o nome da subpasta e separado por uma barra "/"
@@ -126,7 +126,7 @@ echo $data2;
 
 ```
 
-#Models
+# Models
 - Os Models ficam na pasta app/model
 - O Model é chamado pela função load_model($modelFile, $initParam);
 - load_model Tem dois parametros o primeiro é o nome do model. Sendo uma classe, o Model deve ter o mesmo nome no arquivo como na classe, o segundo é o parametro inicial da classe se tiver, pode ser deixado em branco, e deve ser string ou array, passando um unico parametro, e caso seja chamado o `__construct()` deve ser chemado também a função `parent::__construct();`, vale também para destruct;
@@ -189,8 +189,8 @@ class Model3 extends Model_class{
 }
 ```
 
-#Funções Disponiveis
-##load_view
+# Funções Disponiveis
+## load_view
 - Carrega uma view, o primeiro parametro é o nome da View, e o segundo é as variaveis, que devem ser passadas como array, pode ser null
 ```php
 //load_view($viewname, $data = null);
@@ -198,7 +198,7 @@ $data = array("var1" => "val1");
 load_view("folder/to/view", $data);
 ```
 
-##load_model
+## load_model
 - Carrega um model, o primeiro parametro é o nome do Model, e o segundo é o parametro para `__construct()`, deve ser array, pode ser null
 ```php
 //load_model($model, $initParam = null);
@@ -206,7 +206,7 @@ $data  = array("id" => $id, "name" => $name);
 $model = load_model("folder/to/model", $data);
 ```
 
-##load_controller
+## load_controller
 - Carrega um controller, o primeiro parametro é o nome do Controller, o segundo é o parametro para `__construct()`, deve ser array, pode ser null
 ```php
 //load_controller($controller, $data = array());
@@ -214,7 +214,7 @@ $data  = array("id" => $id, "name" => $name);
 load_controller("folder/to/controller", $data);
 ```
 
-##load_helper
+## load_helper
 - Carrega um helper, o primeior parametro é o nome do Helper `Ver os helpers para informações`
 ```php
 //load_helper($file);
@@ -223,7 +223,7 @@ $ini = load_helper("inifile");
 $up  = load_helper("upload");
 ```
 
-##message_page
+## message_page
 - Carrega uma pagina de mensagem que interrompe o código, o primeirio parametro é o view, logalizado dentro de messages dentro de view, e o segundo parametro é array de data para o view
 ```php
 //message_page($view = "message", $data = array("class" => "error", "title" => "Message Page", "message" => "Without Message!"));
@@ -234,21 +234,21 @@ $data["message"] = translate_message("viewnotfound", array("'{viewName}'" => "")
 message_page("message", $data);
 ```
 
-##translate_message
+## translate_message
 - Traduz a variavel definidade no lang.php da lingua definida no APP, o segundo parametro é uma array para trocar alguma parte do texto se quiser
 ```php
 //translate_message($which, $var = null);
 translate_message("viewnotfound", array("{viewName}" => "viewfile"));
 ```
 
-##base_url
+## base_url
 - Retonar o link base do APP
 ```php
 base_url();
 // http://myapp.com
 ```
 
-##redirect_to
+## redirect_to
 - Redireciona o usuário para uma rota especifica dentro do APP
 ```php
 //redirect_to($url);
@@ -256,7 +256,7 @@ redirect_to("/another/route");
 // http://myapp.com/another/route
 ```
 
-##redirect_link
+## redirect_link
 - Se passar só o primeiro parametro volta o caminho para a rota, se passar o segundo retorna a tag html `<a>` com o link e o texto definido, os outros parametros passam a classe e o id para a tag `<a>`
 ```php
 //redirect_link($to = "", $title = "", $class = "", $id = "");
@@ -268,21 +268,21 @@ redirect_link("/another/route", "Button", "btn", "button_id_1");
 // <a href="http://myapp.com/another/route" class="btn" id="button_id_1" title="Button">Button</a>
 ```
 
-##load_css
+## load_css
 - Carrega um arquivo css dentro de public
 ```php
 //load_css($cssFile);
 load_css("css/app.js");
 ```
 
-##load_js
+## load_js
 - Carrega um arquivo jss dentro de public
 ```php
 //load_js($jsFile);
 load_js("/js/app.js");
 ```
 
-##create_log
+## create_log
 - Se o log estiver ativado ele grava na pasta `log` qualquer mensagem, pode ser String ou Array
 ```php
 //create_log($message);
@@ -293,14 +293,14 @@ $data = array("Error to connect to Database", "Incorrect Pass");
 create_log($data);
 ```
 
-##get_client_ip
+## get_client_ip
 - Retorna o IP do cliente;
 ```php
 get_client_ip();
 // 192.168.0.1
 ```
 
-##get_difference_between
+## get_difference_between
 - Retorna uma array com a diferença entre duas strings
 ```php
 //get_difference_between($old, $new);
@@ -315,12 +315,12 @@ echo $diff['new']; // I'm
 
 #Helpers
 
-##Database
-##Inifile
-##Security
-##Text
-##Upload
-##XSS Clean
+## Database
+## Inifile
+## Security
+## Text
+## Upload
+## XSS Clean
 
 #Traduzindo o Sistema
 - Para traduzir ou criar novas opções de mensagens basta editar o arquivo `lang.php` dentro da pasta lang

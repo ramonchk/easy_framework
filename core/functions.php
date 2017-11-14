@@ -235,8 +235,6 @@
 		endif;
 	}
 
-	//Dowload,Email,File,HTML,XML, Twig
-
 	function get_difference_between($old, $new){
 		$from_start = strspn($old ^ $new, "\0");        
 		$from_end = strspn(strrev($old) ^ strrev($new), "\0");
@@ -266,3 +264,79 @@
 			return false;
 		endif;
 	}
+
+	function delete_all_empty_values($array, $toThisValue = null){
+		$array = $array;
+
+		foreach ($array as $key => $value):
+			if( $toThisValue == null ):
+				if( strlen($value) == 0 ):
+					unset($array[$key]);
+				endif;
+			else:
+				if( $value == $toThisValue ):
+					unset($array[$key]);
+				endif;
+			endif;
+		endforeach;
+
+		return $array;
+	}
+
+	function get_values_after($after, $string){
+		if( is_array($string) ):
+			$return = array();
+			foreach ($string as $key => $value) {
+				$value = strstr($value, $after);
+				array_push($return, $value);
+			}
+			return $return;
+		else:
+			$value = strstr($string, $after);
+			return $value;
+		endif;
+	}
+
+	function get_values_before($before, $string){
+		if( is_array($string) ):
+			$return = array();
+			foreach ($string as $key => $value) {
+				$value = strstr($value, $before, true);
+				array_push($return, $value);
+			}
+			return $return;
+		else:
+			$value = strstr($string, $before, true);
+			return $value;
+		endif;
+	}
+
+	function remove_character($remove, $string){
+		if( is_array($string) ):
+			$return = array();
+			foreach ($string as $key => $value) {
+				$value = str_replace($remove, "", $value);
+				array_push($return, $value);
+			}
+			return $return;
+		else:
+			$value = str_replace($remove, "", $string);
+			return $value;
+		endif;
+	}
+
+	function add_values_before($before, $string){
+		if( is_array($string) ):
+			$return = array();
+			foreach ($string as $key => $value) {
+				$value = $before.$value;
+				array_push($return, $value);
+			}
+			return $return;
+		else:
+			$value = $before.$string;
+			return $value;
+		endif;
+	}
+
+	//Dowload,Email,File,HTML,XML, Twig
