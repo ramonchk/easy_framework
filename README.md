@@ -1,5 +1,6 @@
 # Versão Beta 1.7
 # Começando
+
 - Editar as configurações no arquivo config.php
 ```php
 	$config["LANGUAGE"]         = "eng";
@@ -34,7 +35,8 @@ $database['anotherDB'] = array(
 
 ```
 
-#Criando Rotas
+# Criando Rotas
+
 - As rotas ficam no arquivo app/routes.php
 - A criação de rotas é simples, começa chamanda a função estatica get da classe Route e passa dois parametros, $route e $callback
 - $route é o caminho que ele vai ler 
@@ -313,7 +315,7 @@ echo $diff['old']; // I am
 echo $diff['new']; // I'm
 ```
 
-#Helpers
+# Helpers
 
 ## Database
 ## Inifile
@@ -322,7 +324,7 @@ echo $diff['new']; // I'm
 ## Upload
 ## XSS Clean
 
-#Traduzindo o Sistema
+# Traduzindo o Sistema
 - Para traduzir ou criar novas opções de mensagens basta editar o arquivo `lang.php` dentro da pasta lang
 - A pasta lang é dividida em subpastas com o nome abreviado da linguá para usar
 - `eng`
