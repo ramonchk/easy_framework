@@ -1,5 +1,5 @@
 # Versão Beta 1.7
-# Começando
+# Começandovghvhv
 
 - Editar as configurações no arquivo config.php
 ```php
